@@ -1,0 +1,46 @@
+Parameters:
+  EnvironmentType:
+    Type: String
+    AllowedValues:
+      - Production
+      - Test
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 
+        Ref: ProductionImage 
+      InstanceType:
+        Ref: ProductionInstanceTypeRule
+      Tags:
+        - Key: Name
+          Value: Para-Test
+Rules:
+  ProductionInstanceTypeRule:
+    RuleCondition:
+      Fn::Equals:
+        - Ref: EnvironmentType
+        - Production
+    Assertions:
+      - Assert:
+          Fn::Contains:
+            - 
+              - t2.micro
+              - t2.small
+            - Ref: InstanceType
+        AssertDescription: In Production, the instance type must be t2.micro or t2.small.
+
+  ProductionImage:
+    RuleCondition:
+	  Fn::Equals:
+	    - Ref: EnvironmentType
+		- Production
+	Assertions:
+	  - Assert:
+	      Fn::Contains:
+		    -
+			  - ami-08b4a6116aaee62e2
+			  - ami-08b5b3a93ed654d19
+
+
+
