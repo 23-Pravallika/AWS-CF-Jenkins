@@ -1,0 +1,19 @@
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-08b5b3a93ed654d19
+      KeyName: EC2KeyPair-For-SSH.pem
+      InstanceType: t3.micro
+      SecurityGroupIds:
+        - sg-049bbde1d36338f2f
+      UserData:
+       Fn::Base64: !Sub |
+         #!/bin/bash
+         sudo dnf update
+         sudo dnf install install docker -y
+		 sudo systemctl start docker
+		 sudo systemctl enable docker
+      Tags:
+        - Key: Name
+          Value: "docker"
